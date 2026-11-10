@@ -1,0 +1,75 @@
+[project]
+name = "mercado-facil"
+version = "1.0.0"
+description = "Mercado Fácil — sistema de caixa e gestão de vendas de supermercado (ADS · Engenharia de Software Ágil · Grupo 4)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit>=1.40,<2",
+    "pandas>=2.0",
+    "tzdata; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10", "tomli>=2; python_version < '3.11'"]
+
+[tool.setuptools.packages.find]
+include = ["mercadofacil*"]
+
+# ------------------------------------------------------------------ pytest
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -ra"
+filterwarnings = ["error::DeprecationWarning:mercadofacil.*"]
+
+# -------------------------------------------------------------------- ruff
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["data", ".streamlit"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "C4", "PIE", "RUF", "S"]
+ignore = [
+    "S101",   # assert é usado para refinar tipos após consultas que sempre retornam registro
+    "RUF001", # textos em português usam aspas tipográficas de propósito
+    "RUF002",
+    "RUF003",
+    "S608",   # SQL montado só com nomes de colunas de listas fechadas (ver repositories)
+    "SIM108",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S311", "B011"]
+"mercadofacil/seed.py" = ["S105"]
+# Textos de interface em português: o formatador quebra o código, mas não as frases.
+"mercadofacil/ui/**" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["mercadofacil"]
+
+# -------------------------------------------------------------------- mypy
+[tool.mypy]
+python_version = "3.10"
+packages = ["mercadofacil"]
+strict = true
+warn_unreachable = true
+plugins = []
+
+# O Streamlit não é analisado: o resultado dos tipos é o mesmo com ou sem ele instalado.
+[[tool.mypy.overrides]]
+module = ["streamlit", "streamlit.*"]
+follow_imports = "skip"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pandas", "pandas.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["mercadofacil.ui.*"]
+disallow_untyped_decorators = false
+disallow_any_unimported = false
+disallow_any_expr = false
+warn_return_any = false
+disallow_untyped_calls = false

@@ -1,0 +1,16 @@
+# Tema claro e explícito: todos os pares de cor usados pela interface são
+# verificados por tests/test_ui_theme.py (contraste mínimo WCAG AA).
+[theme]
+base = "light"
+primaryColor = "#0B6E3C"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#EAF0EB"
+textColor = "#17261D"
+font = "sans serif"
+
+[client]
+# Oculta o menu de desenvolvedor e a troca de tema (a interface foi desenhada para o tema claro).
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
